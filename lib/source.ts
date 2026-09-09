@@ -1,18 +1,27 @@
 import { docs } from "@/.source/server";
 import { loader } from "fumadocs-core/source";
 import { createElement } from "react";
-import { BookOpen, CircleHelp, Settings, Monitor, Wrench } from "lucide-react";
-import { FaWindows, FaLinux } from "react-icons/fa";
+import {
+  IconBook,
+  IconHelp,
+  IconSettings,
+  IconDeviceDesktop,
+  IconTool,
+  IconBrandWindows,
+  IconBrandDebian,
+  IconBrandApple,
+} from "@tabler/icons-react";
 
-// @note maps icon names to components for sidebar
+// @note maps icon names to tabler components for fumadocs sidebar
 const icons = {
-  BookOpen,
-  CircleHelp,
-  Settings,
-  Monitor,
-  Wrench,
-  Windows: FaWindows,
-  Linux: FaLinux,
+  BookOpen: IconBook,
+  CircleHelp: IconHelp,
+  Settings: IconSettings,
+  Monitor: IconDeviceDesktop,
+  Wrench: IconTool,
+  Windows: IconBrandWindows,
+  MacOS: IconBrandApple,
+  Linux: IconBrandDebian,
 };
 
 export const source = loader({

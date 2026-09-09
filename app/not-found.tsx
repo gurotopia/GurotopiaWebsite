@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 // @note simple 404 page with glitch effect
 export default function NotFound() {
@@ -33,9 +33,7 @@ export default function NotFound() {
           </motion.span>
         </div>
 
-        <p className="mb-2 text-xl font-medium text-foreground sm:text-2xl">
-          Page not found
-        </p>
+        <p className="mb-2 text-xl font-medium text-foreground sm:text-2xl">Page not found</p>
         <p className="mb-8 max-w-md text-sm text-muted-foreground sm:text-base">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
@@ -63,7 +61,7 @@ export default function NotFound() {
           style={{
             backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px),
                               linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
+            backgroundSize: "60px 60px",
           }}
         />
       </div>

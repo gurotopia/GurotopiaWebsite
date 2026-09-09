@@ -1,0 +1,159 @@
+---
+title: macOS Installation
+description: Step-by-step guide to install and run Gurotopia on macOS
+icon: MacOS
+---
+
+# macOS Installation
+
+This guide covers installing Gurotopia on macOS using **Homebrew** or **MacPorts**.
+
+## Prerequisites
+
+You'll need a terminal and administrator access. Install Apple's Command Line Tools first:
+
+```bash
+xcode-select --install
+```
+
+<Callout type="info">
+  Don't have a package manager yet? Install [Homebrew](https://brew.sh/) or
+  [MacPorts](https://www.macports.org/install.php), then come back to this step.
+</Callout>
+
+## Install Dependencies
+
+Pick **one** package manager and install GCC, Make, OpenSSL, and SQLite.
+
+### Homebrew
+
+```bash
+brew install gcc make openssl sqlite
+```
+
+<Callout type="info">
+  Homebrew's OpenSSL is keg-only. If the compiler cannot find it, export these before building:
+</Callout>
+
+```bash
+export LDFLAGS="-L$(brew --prefix openssl)/lib"
+export CPPFLAGS="-I$(brew --prefix openssl)/include"
+```
+
+### MacPorts
+
+```bash
+sudo port install gcc15 gmake openssl3 sqlite3
+```
+
+<Callout type="info">
+  MacPorts GNU Make is installed as `gmake`. Gurotopia requires **GCC 13 or newer** — `gcc15`
+  satisfies that. See the [FAQ](/faq/build-errors) if `std::format` fails.
+</Callout>
+
+This installs:
+
+- **GCC** - The GNU Compiler Collection for C/C++
+- **Make** - Build automation tool
+- **OpenSSL** - For SSL/TLS encryption
+- **SQLite** - Lightweight database engine
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/gurotopia/Gurotopia.git
+cd Gurotopia
+```
+
+## Compile the Server
+
+Navigate to the project's root directory and run:
+
+```bash
+make -j$(sysctl -n hw.ncpu)
+```
+
+If you installed GNU Make from MacPorts:
+
+```bash
+gmake -j$(sysctl -n hw.ncpu)
+```
+
+<Callout type="info">
+  `sysctl -n hw.ncpu` uses all available CPU cores for faster compilation.
+</Callout>
+
+<Callout type="warn">
+  Got a build error? Visit the [FAQ](/faq/build-errors) section, it might have the solution you
+  need!
+</Callout>
+
+### Build Output
+
+After successful compilation, you'll find the executable in the project directory:
+
+```
+./main.out
+```
+
+## Run the Server
+
+Execute the compiled binary:
+
+```bash
+./main.out
+```
+
+The server will start and display connection information in the terminal.
+
+### Run in Background
+
+To run the server in the background:
+
+```bash
+nohup ./main.out > server.log 2>&1 &
+```
+
+Or use `screen` or `tmux` for a persistent session:
+
+```bash
+screen -S gurotopia
+./main.out
+# Press Ctrl+A, then D to detach
+```
+
+## Troubleshooting
+
+### Permission denied
+
+Make the binary executable:
+
+```bash
+chmod +x main.out
+```
+
+### Missing libraries / OpenSSL not found
+
+Reinstall the toolchain, then retry the build:
+
+```bash
+# Homebrew
+brew install gcc make openssl sqlite
+
+# MacPorts
+sudo port install gcc15 gmake openssl3 sqlite3
+```
+
+### Port already in use
+
+Check if another process is using the port:
+
+```bash
+sudo lsof -i :17091
+```
+
+Kill the process or change the port in configuration.
+
+## Next Steps
+
+- [Configure your server](/configuration)

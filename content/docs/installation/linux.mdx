@@ -37,7 +37,7 @@ sudo dnf install openssl-devel sqlite-devel
 ```
 
 <Callout type="info">
-The `build-essential` or `base-devel` package includes GCC, G++, and Make.
+  The `build-essential` or `base-devel` package includes GCC, G++, and Make.
 </Callout>
 
 ## Clone the Repository
@@ -56,11 +56,12 @@ make -j$(nproc)
 ```
 
 <Callout type="info">
-The `-j$(nproc)` flag uses all available CPU cores for faster compilation.
+  The `-j$(nproc)` flag uses all available CPU cores for faster compilation.
 </Callout>
 
 <Callout type="warn">
-Got a build error? Visit the [FAQ](/overview/faq/build-errors) section, it might have the solution you need!
+  Got a build error? Visit the [FAQ](/overview/faq/build-errors) section, it might have the solution
+  you need!
 </Callout>
 
 ### Build Output
@@ -110,7 +111,8 @@ docker run -d -p 17091:17091 --name gurotopia-server gurotopia
 ```
 
 <Callout type="warn">
-Make sure to configure your hosts file before connecting. See the [Configuration](/docs/configuration) guide.
+  Make sure to configure your hosts file before connecting. See the
+  [Configuration](/docs/configuration) guide.
 </Callout>
 
 ## Troubleshooting
@@ -118,6 +120,7 @@ Make sure to configure your hosts file before connecting. See the [Configuration
 ### Permission denied
 
 Make the binary executable:
+
 ```bash
 chmod +x main.out
 ```
@@ -125,6 +128,7 @@ chmod +x main.out
 ### Missing libraries
 
 If you get "library not found" errors, ensure all dependencies are installed:
+
 ```bash
 # Debian/Ubuntu
 sudo apt-get install libssl-dev libsqlite3-dev
@@ -136,6 +140,7 @@ sudo pacman -S openssl sqlite
 ### Port already in use
 
 Check if another process is using the port:
+
 ```bash
 sudo lsof -i :17091
 ```

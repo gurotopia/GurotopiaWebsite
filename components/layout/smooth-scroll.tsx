@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Lenis from 'lenis';
-import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import Lenis from "lenis";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 declare global {
   interface Window {
@@ -16,7 +16,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // @note destroy existing lenis instance if it exists
-    if (typeof window !== 'undefined' && window.lenis) {
+    if (typeof window !== "undefined" && window.lenis) {
       window.lenis.destroy();
       delete window.lenis;
     }
@@ -27,8 +27,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      orientation: "vertical",
+      gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2,
@@ -42,7 +42,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     requestAnimationFrame(raf);
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.lenis = lenis;
     }
 
@@ -50,10 +50,10 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a[href^="#"]');
-      
+
       if (anchor) {
-        const href = anchor.getAttribute('href');
-        if (href && href.startsWith('#')) {
+        const href = anchor.getAttribute("href");
+        if (href && href.startsWith("#")) {
           e.preventDefault();
           const targetElement = document.querySelector(href);
           if (targetElement && targetElement instanceof HTMLElement) {
@@ -64,12 +64,12 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       }
     };
 
-    document.addEventListener('click', handleAnchorClick);
+    document.addEventListener("click", handleAnchorClick);
 
     return () => {
       lenis.destroy();
-      document.removeEventListener('click', handleAnchorClick);
-      if (typeof window !== 'undefined') {
+      document.removeEventListener("click", handleAnchorClick);
+      if (typeof window !== "undefined") {
         delete window.lenis;
       }
     };

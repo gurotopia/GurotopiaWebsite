@@ -1,5 +1,5 @@
 {
   "title": "Installation",
   "icon": "Wrench",
-  "pages": ["windows", "linux"]
+  "pages": ["windows", "macos", "linux"]
 }
