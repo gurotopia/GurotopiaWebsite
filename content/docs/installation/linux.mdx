@@ -10,7 +10,9 @@ This guide covers installing Gurotopia on various Linux distributions.
 
 ## Prerequisites
 
-You'll need a terminal and sudo/root access to install dependencies.
+You'll need a terminal and sudo/root access to install dependencies. You also need a running
+**MariaDB** server. The packages below are the compiler, OpenSSL, and the MariaDB *client* library
+used to link `main.out`.
 
 ## Install Dependencies
 
@@ -19,25 +21,26 @@ Choose your distribution and run the appropriate commands:
 ### Arch Linux
 
 ```bash
-sudo pacman -S base-devel openssl sqlite
+sudo pacman -S base-devel openssl mariadb-libs
 ```
 
 ### Debian / Ubuntu
 
 ```bash
-sudo apt-get update
-sudo apt-get install build-essential libssl-dev openssl sqlite3
+sudo apt-get update && sudo apt-get install build-essential libssl-dev libmariadb-dev
 ```
 
 ### Fedora
 
 ```bash
-sudo dnf groupinstall "Development Tools"
-sudo dnf install openssl-devel sqlite-devel
+sudo dnf group install development-tools
+sudo dnf install openssl-devel mariadb-connector-c-devel
 ```
 
 <Callout type="info">
-  The `build-essential` or `base-devel` package includes GCC, G++, and Make.
+  `base-devel` / `build-essential` / `development-tools` include GCC, G++, and Make. Gurotopia
+  needs **GCC 13 or newer** for `std::format`. See the [FAQ](/faq/build-errors) if the compiler
+  rejects it.
 </Callout>
 
 ## Clone the Repository
@@ -60,8 +63,8 @@ make -j$(nproc)
 </Callout>
 
 <Callout type="warn">
-  Got a build error? Visit the [FAQ](/overview/faq/build-errors) section, it might have the solution
-  you need!
+  Got a build error? Visit the [FAQ](/faq/build-errors) section, it might have the solution you
+  need!
 </Callout>
 
 ### Build Output
@@ -112,7 +115,7 @@ docker run -d -p 17091:17091 --name gurotopia-server gurotopia
 
 <Callout type="warn">
   Make sure to configure your hosts file before connecting. See the
-  [Configuration](/docs/configuration) guide.
+  [Configuration](/configuration) guide.
 </Callout>
 
 ## Troubleshooting
@@ -127,14 +130,17 @@ chmod +x main.out
 
 ### Missing libraries
 
-If you get "library not found" errors, ensure all dependencies are installed:
+If you get "library not found" errors, install the OpenSSL and MariaDB client packages:
 
 ```bash
 # Debian/Ubuntu
-sudo apt-get install libssl-dev libsqlite3-dev
+sudo apt-get install libssl-dev libmariadb-dev
 
 # Arch
-sudo pacman -S openssl sqlite
+sudo pacman -S openssl mariadb-libs
+
+# Fedora
+sudo dnf install openssl-devel mariadb-connector-c-devel
 ```
 
 ### Port already in use
@@ -149,4 +155,4 @@ Kill the process or change the port in configuration.
 
 ## Next Steps
 
-- [Configure your server](/docs/configuration)
+- [Configure your server](/configuration)
