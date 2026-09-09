@@ -8,6 +8,12 @@ icon: MacOS
 
 This guide covers installing Gurotopia on macOS using **Homebrew** or **MacPorts**.
 
+<Callout type="warn">
+  macOS is only tested on Intel (`x86_64`). Apple Silicon is not tested yet.
+  `include/enet/lib/libenet_macos.a` is a universal (`x86_64` + `arm64`) archive, so it should still
+  link on Apple Silicon.
+</Callout>
+
 ## Prerequisites
 
 You'll need a terminal and administrator access. Install Apple's Command Line Tools first:
@@ -23,27 +29,18 @@ xcode-select --install
 
 ## Install Dependencies
 
-Pick **one** package manager and install GCC, Make, OpenSSL, and SQLite.
+Pick **one** package manager. You can also mix them: MacPorts GCC plus Homebrew OpenSSL and MariaDB is a common setup. Use the Homebrew compile command below if `brew --prefix openssl@3` exists.
 
 ### Homebrew
 
 ```bash
-brew install gcc make openssl sqlite
-```
-
-<Callout type="info">
-  Homebrew's OpenSSL is keg-only. If the compiler cannot find it, export these before building:
-</Callout>
-
-```bash
-export LDFLAGS="-L$(brew --prefix openssl)/lib"
-export CPPFLAGS="-I$(brew --prefix openssl)/include"
+brew install gcc make openssl@3 mariadb-connector-c
 ```
 
 ### MacPorts
 
 ```bash
-sudo port install gcc15 gmake openssl3 sqlite3
+sudo port install gcc15 gmake openssl3 mariadb-11.4
 ```
 
 <Callout type="info">
@@ -56,7 +53,7 @@ This installs:
 - **GCC** - The GNU Compiler Collection for C/C++
 - **Make** - Build automation tool
 - **OpenSSL** - For SSL/TLS encryption
-- **SQLite** - Lightweight database engine
+- **MariaDB** - Client library (`-lmariadb`)
 
 ## Clone the Repository
 
@@ -67,20 +64,28 @@ cd Gurotopia
 
 ## Compile the Server
 
-Navigate to the project's root directory and run:
+Apple's SDK does not ship OpenSSL headers, and the Makefile does not add Homebrew or MacPorts
+paths. Pass them on the `make` line. Plain `make` will fail with `openssl/ssl.h: No such file or directory`.
+
+### Homebrew
 
 ```bash
-make -j$(sysctl -n hw.ncpu)
+make -j$(sysctl -n hw.ncpu) \
+  includes="-Iinclude -Ibuild/include -I$(brew --prefix openssl@3)/include" \
+  libraries="-L$(brew --prefix openssl@3)/lib -L$(brew --prefix mariadb-connector-c)/lib -L./include/enet/lib -L./include/mysql/lib -lssl -lcrypto -lmariadb -lenet_macos"
 ```
 
-If you installed GNU Make from MacPorts:
+### MacPorts
 
 ```bash
-gmake -j$(sysctl -n hw.ncpu)
+gmake -j$(sysctl -n hw.ncpu) \
+  includes="-Iinclude -Ibuild/include -I/opt/local/libexec/openssl3/include" \
+  libraries="-L/opt/local/libexec/openssl3/lib -L/opt/local/lib/mariadb-11.4/mysql -L./include/enet/lib -L./include/mysql/lib -lssl -lcrypto -lmariadb -lenet_macos"
 ```
 
 <Callout type="info">
-  `sysctl -n hw.ncpu` uses all available CPU cores for faster compilation.
+  `sysctl -n hw.ncpu` uses all available CPU cores. Use `gmake` if Make came from MacPorts. The
+  extra `-lenet_macos` flag links the macOS ENet archive; the default `-lenet` is a Linux library.
 </Callout>
 
 <Callout type="warn">
@@ -134,14 +139,15 @@ chmod +x main.out
 
 ### Missing libraries / OpenSSL not found
 
-Reinstall the toolchain, then retry the build:
+The compiler is not searching Homebrew or MacPorts. Re-run the compile command from this page
+(not a bare `make`). If the prefixes are empty, reinstall the packages:
 
 ```bash
 # Homebrew
-brew install gcc make openssl sqlite
+brew install gcc make openssl@3 mariadb-connector-c
 
 # MacPorts
-sudo port install gcc15 gmake openssl3 sqlite3
+sudo port install gcc15 gmake openssl3 mariadb-11.4
 ```
 
 ### Port already in use

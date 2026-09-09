@@ -84,6 +84,10 @@ brew install gcc
 sudo port install gcc15
 ```
 
+If the compiler dies on `openssl/ssl.h: No such file or directory`, Apple's SDK does not include
+OpenSSL. Do not export `CPPFLAGS` / `LDFLAGS`. This Makefile only reads `includes` and `libraries`.
+Use the Homebrew or MacPorts `make` command on the [macOS installation](/installation/macos) page.
+
 <Callout type="info">
   Don't have a package manager yet? Install [Homebrew](https://brew.sh/) or
   [MacPorts](https://www.macports.org/install.php) first.
